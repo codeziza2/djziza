@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2C7075">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261002b">
+  <title>Creative Brief — DJ Ziza</title>
+  <meta name="description" content="Tell DJ Ziza about the music for your event: the vibe, your favorite genres and the songs on repeat.">
+  <link rel="canonical" href="https://www.djziza.com/creative-brief.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.djziza.com/creative-brief.html">
+  <meta property="og:title" content="DJ Ziza — Creative brief">
+  <meta property="og:description" content="Tell DJ Ziza about the music you want at your event.">
+  <meta property="og:image" content="https://www.djziza.com/assets/img/og-image.jpg">
+  <meta property="og:site_name" content="DJ Ziza">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/" aria-label="DJ Ziza home">
+        <picture>
+          <source srcset="/assets/img/djziza-logo.webp" type="image/webp">
+          <img src="/assets/img/djziza-logo.png" alt="DJ Ziza" width="643" height="301">
+        </picture>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <a href="/#mix">Mixes</a>
+        <a href="/#about">About</a>
+        <a href="/#packages">Packages</a>
+        <a class="btn btn-ink btn-sm" href="/#book">Book a date</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="brief-hero">
+      <div class="wrap brief-hero-inner">
+        <div class="brief-hero-copy">
+          <h1 class="display brief-title">Creative brief</h1>
+          <p class="brief-lead">Help Ziza build the right set for your night. Tell us the vibe, the genres and the songs you can't stop playing. There are no wrong answers.</p>
+        </div>
+        <div class="brief-art">
+          <picture>
+            <source srcset="/assets/img/headphones.webp" type="image/webp">
+            <img src="/assets/img/headphones.jpg" alt="" width="516" height="633">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap brief-layout">
+        <form id="brief-form" class="brief-form" novalidate aria-label="Creative brief">
+          <fieldset class="brief-group">
+            <legend class="display brief-legend">Contact</legend>
+            <div class="field-row">
+              <div class="field">
+                <label for="b-name">Name</label>
+                <input id="b-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+              </div>
+              <div class="field">
+                <label for="b-email">Email</label>
+                <input id="b-email" name="email" type="email" autocomplete="email" maxlength="200" required>
+              </div>
+            </div>
+            <div class="field brief-date">
+              <label for="b-date">Event date</label>
+              <input id="b-date" name="date" type="date" required aria-describedby="b-date-help">
+              <p class="field-help" id="b-date-help">Ziza plans the music and any check-ins with you around this date.</p>
+            </div>
+          </fieldset>
+
+          <fieldset class="brief-group">
+            <legend class="display brief-legend">The music</legend>
+            <div class="field">
+              <label for="b-experience">In one sentence, what musical experience do you want at your event?</label>
+              <input id="b-experience" name="experience" type="text" maxlength="400" aria-describedby="b-experience-help">
+              <p class="field-help" id="b-experience-help">For example: old school, all-90s, afrobeats all night. Go ahead, mix it up.</p>
+            </div>
+            <div class="field">
+              <label for="b-background">What type of music moves your groove thang?</label>
+              <textarea id="b-background" name="background" maxlength="2000" rows="3"></textarea>
+            </div>
+            <div class="field">
+              <span class="field-label" id="genres-label">Three genres to inspire your night</span>
+              <div class="genre-row" role="group" aria-labelledby="genres-label">
+                <label class="visually-hidden" for="b-genre1">Genre 1</label>
+                <input id="b-genre1" name="genre1" type="text" maxlength="60" placeholder="Genre 1">
+                <label class="visually-hidden" for="b-genre2">Genre 2</label>
+                <input id="b-genre2" name="genre2" type="text" maxlength="60" placeholder="Genre 2">
+                <label class="visually-hidden" for="b-genre3">Genre 3</label>
+                <input id="b-genre3" name="genre3" type="text" maxlength="60" placeholder="Genre 3">
+              </div>
+            </div>
+            <div class="field">
+              <label for="b-songs">Let's get personal. What songs are on repeat in your Spotify, Tidal, SoundCloud or Apple Music?</label>
+              <textarea id="b-songs" name="songs" maxlength="4000" rows="4"></textarea>
+            </div>
+          </fieldset>
+
+          <fieldset class="brief-group">
+            <legend class="display brief-legend">What did we forget?</legend>
+            <div class="field">
+              <label for="b-requests">Special requests: first dance, must-plays, do-not-plays, announcements</label>
+              <textarea id="b-requests" name="requests" maxlength="4000" rows="5"></textarea>
+            </div>
+          </fieldset>
+
+          <div class="hp" aria-hidden="true">
+            <label for="b-company">Company</label>
+            <input id="b-company" name="company" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="brief-submit">
+            <noscript><p class="form-error">This form needs JavaScript. You can email <a href="mailto:djziza@denwize.com">djziza@denwize.com</a> instead.</p></noscript>
+            <p class="form-error" role="alert" hidden></p>
+            <button class="btn btn-primary" type="submit">Send my creative brief</button>
+            <p class="small form-hint">Ziza will reply to the email address you enter.</p>
+            <div class="form-done" tabindex="-1" hidden aria-live="polite"></div>
+          </div>
+        </form>
+
+        <aside class="brief-aside">
+          <blockquote class="brief-quote">
+            <p>“One good thing about music, when it hits you, you feel no pain.”</p>
+            <footer>Bob Marley</footer>
+          </blockquote>
+          <div class="brief-pdf">
+            <p><strong>Prefer paper?</strong> Print the brief, fill it in and email a photo.</p>
+            <a class="text-link" href="/assets/docs/djziza-creative-brief.pdf" download>Download the PDF</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="wrap footer-top">
+      <img class="footer-logo" src="/assets/img/djziza-logo.png" alt="DJ Ziza" width="643" height="301" loading="lazy">
+      <div class="footer-contact">
+        <span>Atlanta, GA</span>
+        <a class="icon-link" href="https://www.instagram.com/iamdjziza/" rel="noopener" target="_blank" aria-label="DJ Ziza on Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg></a>
+        <a class="icon-link" href="https://www.mixcloud.com/djziza/" rel="noopener" target="_blank" aria-label="DJ Ziza on Mixcloud"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14v-2M7 17V9M11 19V5M15 17V9M19 14v-2"/></svg></a>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>Copyright © <span class="year">2026</span> Denwize Consulting, LLC. All rights reserved.</p>
+      <img class="denwize-logo" src="/assets/img/denwize-logo.png" alt="Denwize Consulting" width="738" height="189" loading="lazy">
+    </div>
+  </footer>
+
+  <script src="/assets/js/site.js?v=20261002b" defer></script>
+</body>
+</html>

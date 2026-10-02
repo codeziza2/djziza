@@ -1,0 +1,28 @@
+customHeaders:
+  # Security headers for every file
+  - pattern: '**/*'
+    headers:
+      - key: 'Strict-Transport-Security'
+        value: 'max-age=31536000'
+      - key: 'X-Content-Type-Options'
+        value: 'nosniff'
+      - key: 'Referrer-Policy'
+        value: 'strict-origin-when-cross-origin'
+      - key: 'X-Frame-Options'
+        value: 'SAMEORIGIN'
+      - key: 'Permissions-Policy'
+        value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+      # Allows only: this site, Google Fonts, Mixcloud (mix list, covers, player)
+      # and AWS Lambda Function URLs (*.on.aws) for the forms.
+      - key: 'Content-Security-Policy'
+        value: "default-src 'self'; script-src 'self' https://api.mixcloud.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.mixcloud.com; connect-src 'self' https://api.mixcloud.com https://*.on.aws; frame-src https://www.mixcloud.com https://player-widget.mixcloud.com; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+  # Pages: always check for the latest version
+  - pattern: '*.html'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=0, must-revalidate'
+  # CSS/JS/images: cache for a week (CSS/JS links carry ?v= to bust the cache on changes)
+  - pattern: '/assets/**/*'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=604800'
