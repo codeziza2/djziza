@@ -5,7 +5,7 @@
   // ===========================================================================
   // Settings
   // ===========================================================================
-  // Paste the Lambda Function URL here once it's set up (see EMAIL-SETUP.md).
+  // The forms' AWS Function URL (see GO-LIVE.md, part 3).
   // While it's empty, forms fall back to opening the visitor's email app.
   var FORM_ENDPOINT = 'https://pxrdo44d63zs32thmfgpx6doua0mbwsu.lambda-url.us-east-2.on.aws/';
   var FALLBACK_TO = 'djziza@denwize.com';
@@ -236,6 +236,7 @@
 
     form.addEventListener('input', function (e) {
       if (e.target.getAttribute('aria-invalid') === 'true') e.target.setAttribute('aria-invalid', 'false');
+      if (!doneEl.hidden && FORM_ENDPOINT) doneEl.hidden = true;
     });
 
     function showError(html) { errorEl.innerHTML = html; errorEl.hidden = false; }
@@ -305,12 +306,17 @@
             err.userFacing = r.status === 400 && r.data.error;
             throw err;
           }
-          form.querySelectorAll('input, select, textarea, button').forEach(function (el) { el.disabled = true; });
-          if (hintEl) hintEl.hidden = true;
           var first = val(form.elements.name).split(/\s+/)[0];
-          doneEl.innerHTML = '<p class="display done-title">' + esc(opts.doneTitle) + '</p><p>Thanks, ' + esc(first) + '. Ziza will reply to ' + esc(val(form.elements.email)) + '. Check your spam folder if you don\u2019t see it.</p>';
+          var replyTo = val(form.elements.email);
+          // Clear the form so it's ready to use again
+          form.reset();
+          if (dateEl) { delete dateEl.dataset.iso; dateEl.min = todayISO(); }
+          form.querySelectorAll('[aria-invalid]').forEach(function (el) { el.removeAttribute('aria-invalid'); });
+          doneEl.innerHTML = '<p class="display done-title">Email sent.</p><p>Thanks, ' + esc(first) + '. ' + esc(opts.doneText) + ' Ziza will reply to ' + esc(replyTo) + '.</p>';
           doneEl.hidden = false;
-          doneEl.focus();
+          doneEl.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+          doneEl.focus({ preventScroll: true });
+          button.disabled = false;
         })
         .catch(function (err) {
           clearTimeout(timer);
@@ -334,7 +340,7 @@
 
   setupForm(document.getElementById('booking-form'), {
     errorText: ERROR_TEXT,
-    doneTitle: 'Request sent.',
+    doneText: 'Your booking request is on its way.',
     payload: function (f) {
       return {
         form: 'booking',
@@ -367,7 +373,7 @@
 
   setupForm(document.getElementById('brief-form'), {
     errorText: ERROR_TEXT,
-    doneTitle: 'Brief sent.',
+    doneText: 'Your creative brief is on its way.',
     payload: function (f) {
       return {
         form: 'brief',
