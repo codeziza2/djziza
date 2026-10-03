@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<title>{{TITLE}}</title>
+<!--
+  DJ Ziza — confirmation email sent to visitors after they submit a form.
+  The forms function fills in the {{PLACEHOLDERS}}. Edit wording/colors here; keep the placeholders.
+  Email clients ignore most CSS, so everything is inline and table-based on purpose.
+-->
+</head>
+<body style="margin:0;padding:0;background:#EAF3F3;-webkit-text-size-adjust:100%;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#EAF3F3;">{{PREHEADER}}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EAF3F3;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#FFFFFF;border-radius:14px;overflow:hidden;">
+        <!-- Logo colors stripe -->
+        <tr>
+          <td style="padding:0;font-size:0;line-height:0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="25%" height="8" style="background:#2C7075;height:8px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" height="8" style="background:#FFC005;height:8px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" height="8" style="background:#FF4D00;height:8px;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="25%" height="8" style="background:#FF7A00;height:8px;font-size:0;line-height:0;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Logo -->
+        <tr>
+          <td align="center" style="padding:36px 32px 8px;">
+            <a href="{{SITE_URL}}" style="text-decoration:none;">
+              <img src="{{SITE_URL}}/assets/img/djziza-logo.png" width="190" height="89" alt="DJ Ziza" style="display:block;width:190px;height:auto;border:0;outline:none;color:#2C7075;font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:bold;">
+            </a>
+          </td>
+        </tr>
+        <!-- Heading + intro -->
+        <tr>
+          <td style="padding:24px 40px 0;font-family:Arial,Helvetica,sans-serif;color:#102A2C;">
+            <p style="margin:0 0 8px;font-size:16px;color:#3B4A4B;">Hi {{FIRST_NAME}},</p>
+            <h1 style="margin:0 0 14px;font-family:'Arial Narrow',Arial,Helvetica,sans-serif;font-size:34px;line-height:1.05;font-weight:bold;text-transform:uppercase;color:#102A2C;">{{TITLE}}</h1>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#3B4A4B;">{{INTRO}}</p>
+          </td>
+        </tr>
+        <!-- Summary -->
+        <tr>
+          <td style="padding:18px 40px 0;font-family:Arial,Helvetica,sans-serif;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              {{ROWS}}
+            </table>
+          </td>
+        </tr>
+        <!-- What happens next -->
+        <tr>
+          <td style="padding:22px 40px 0;font-family:Arial,Helvetica,sans-serif;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EAF3F3;border-left:6px solid #FFC005;border-radius:10px;">
+              <tr>
+                <td style="padding:16px 18px;font-size:15px;line-height:1.6;color:#102A2C;">
+                  <strong style="display:block;margin-bottom:4px;">What happens next</strong>
+                  {{NEXT}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Button -->
+        <tr>
+          <td align="center" style="padding:28px 40px 8px;font-family:Arial,Helvetica,sans-serif;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" bgcolor="#FF7A00" style="border-radius:999px;">
+                  <a href="{{SITE_URL}}/#mix" style="display:inline-block;padding:14px 28px;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;color:#102A2C;text-decoration:none;border-radius:999px;">Hear the latest mixes</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Sign-off -->
+        <tr>
+          <td style="padding:20px 40px 36px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#3B4A4B;">
+            Let the music speak,<br>
+            <strong style="color:#102A2C;">DJ Ziza</strong>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="padding:20px 40px;background:#102A2C;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#CFDCDC;">
+            <a href="{{SITE_URL}}" style="color:#FFFFFF;font-weight:bold;text-decoration:none;">djziza.com</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.instagram.com/iamdjziza/" style="color:#FFC005;text-decoration:none;">Instagram</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.mixcloud.com/djziza/" style="color:#FFC005;text-decoration:none;">Mixcloud</a>
+            <br>
+            You're receiving this because you sent a request on djziza.com. &copy; {{YEAR}} Denwize Consulting, LLC.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
