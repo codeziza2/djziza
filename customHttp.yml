@@ -13,9 +13,9 @@ customHeaders:
       - key: 'Permissions-Policy'
         value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
       # Allows only: this site, Google Fonts, Mixcloud (mix list, covers, player)
-      # and AWS Lambda Function URLs (*.on.aws) for the forms.
+      # AWS Lambda Function URLs (*.on.aws) for the forms, and CloudFront (*.cloudfront.net) for event videos.
       - key: 'Content-Security-Policy'
-        value: "default-src 'self'; script-src 'self' https://api.mixcloud.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.mixcloud.com; connect-src 'self' https://api.mixcloud.com https://*.on.aws; frame-src https://www.mixcloud.com https://player-widget.mixcloud.com; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+        value: "default-src 'self'; script-src 'self' https://api.mixcloud.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.mixcloud.com https://*.cloudfront.net; connect-src 'self' https://api.mixcloud.com https://*.on.aws https://*.cloudfront.net; frame-src https://www.mixcloud.com https://player-widget.mixcloud.com; media-src 'self' https://*.cloudfront.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
   # Pages: always check for the latest version
   - pattern: '*.html'
     headers:

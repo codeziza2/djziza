@@ -10,6 +10,12 @@
   var FORM_ENDPOINT = 'https://pxrdo44d63zs32thmfgpx6doua0mbwsu.lambda-url.us-east-2.on.aws/';
   var FALLBACK_TO = 'djziza@denwize.com';
 
+  // Event videos: CloudFront address in front of the djziza-events S3 bucket (see djziza-media.yaml).
+  // Upload a video to the bucket's videos/ folder and it appears on the site. Give its thumbnail the
+  // same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section.
+  var MEDIA_URL = 'https://d1qkitd2sch2hj.cloudfront.net';
+  var MEDIA_PREFIX = 'videos/';
+
   var MIXCLOUD_USER = 'djziza';
   var MIX_LIMIT = 13; // newest mixes to show
 
@@ -213,6 +219,82 @@
       .catch(viaJsonp)
       .then(function (list) { if (list && list.length) render(list); })
       .catch(function () { /* keep the built-in list */ });
+  })();
+
+  // ===========================================================================
+  // Ziza moments: event videos listed live from S3 (through CloudFront)
+  // ===========================================================================
+  (function initMoments() {
+    var section = document.getElementById('moments');
+    var grid = document.getElementById('moments-grid');
+    if (!section || !grid || !MEDIA_URL) return;
+    var base = MEDIA_URL.replace(/\/$/, '');
+    var VIDEO = /\.(mp4|m4v|webm|mov)$/i, IMAGE = /\.(jpe?g|png|webp)$/i;
+
+    function stem(key) { return key.slice(MEDIA_PREFIX.length).replace(/\.[^.]+$/, '').toLowerCase(); }
+    function title(key) {
+      return key.slice(MEDIA_PREFIX.length).replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim()
+        .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    }
+    function url(key) { return base + '/' + key.split('/').map(encodeURIComponent).join('/'); }
+    function type(key) { var ext = key.split('.').pop().toLowerCase(); return ext === 'mov' ? 'video/quicktime' : ext === 'webm' ? 'video/webm' : 'video/mp4'; }
+
+    function render(objects) {
+      var videos = objects.filter(function (o) { return VIDEO.test(o.key); });
+      if (!videos.length) return;
+      var images = objects.filter(function (o) { return IMAGE.test(o.key); });
+      var byStem = {};
+      images.forEach(function (o) { byStem[stem(o.key)] = o.key; });
+      videos.sort(function (a, b) { return b.modified - a.modified; });
+
+      grid.classList.toggle('is-single', videos.length === 1);
+      grid.innerHTML = videos.map(function (v) {
+        // Thumbnail: same name as the video; if there's exactly one video and one image, pair them.
+        var poster = byStem[stem(v.key)] || (videos.length === 1 && images.length === 1 ? images[0].key : '');
+        return '<figure class="moment"><div class="moment-media">' +
+          '<video controls playsinline preload="none"' + (poster ? ' poster="' + esc(url(poster)) + '"' : '') + ' aria-label="' + esc(title(v.key)) + '">' +
+          '<source src="' + esc(url(v.key)) + '" type="' + type(v.key) + '">' +
+          '</video></div><figcaption><span class="moment-title">' + esc(title(v.key)) + '</span></figcaption></figure>';
+      }).join('');
+
+      // Only one video plays at a time; match the frame to the thumbnail's shape (e.g. vertical clips)
+      grid.querySelectorAll('video').forEach(function (vid) {
+        vid.addEventListener('play', function () {
+          grid.querySelectorAll('video').forEach(function (other) { if (other !== vid) other.pause(); });
+        });
+        var p = vid.getAttribute('poster');
+        if (p) {
+          var img = new Image();
+          img.onload = function () { if (img.naturalWidth && img.naturalHeight) vid.parentNode.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight; };
+          img.src = p;
+        }
+      });
+
+      section.hidden = false;
+      document.querySelectorAll('[data-moments-link]').forEach(function (a) { a.hidden = false; });
+      if (location.hash === '#moments') section.scrollIntoView();
+    }
+
+    if (window.MOMENTS_SAMPLE) { render(window.MOMENTS_SAMPLE); return; }
+
+    var ctrl = 'AbortController' in window ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 6000);
+    fetch(base + '/', ctrl ? { signal: ctrl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('media ' + r.status); return r.text(); })
+      .then(function (xml) {
+        clearTimeout(timer);
+        var doc = new DOMParser().parseFromString(xml, 'application/xml');
+        var objects = Array.prototype.map.call(doc.getElementsByTagName('Contents'), function (c) {
+          var get = function (tag) { var el = c.getElementsByTagName(tag)[0]; return el ? el.textContent : ''; };
+          return { key: get('Key'), modified: Date.parse(get('LastModified')) || 0, size: +get('Size') || 0 };
+        }).filter(function (o) { return o.key.indexOf(MEDIA_PREFIX) === 0 && o.size > 0; });
+        render(objects);
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        // Section stays hidden; old links to #moments fall back to About
+        if (location.hash === '#moments') { var a = document.getElementById('about'); if (a) a.scrollIntoView(); }
+      });
   })();
 
   // ===========================================================================
