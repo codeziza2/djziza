@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="/assets/css/site.css?v=20261003b">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261003c">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -62,7 +62,7 @@
       <nav id="site-nav" class="site-nav" aria-label="Main">
         <a href="#mix">Mixes</a>
         <a href="#about">About</a>
-        <a href="#moments" data-moments-link hidden>Moments</a>
+        <a href="#moments">Moments</a>
         <a href="#packages">Packages</a>
         <a class="btn btn-ink btn-sm" href="#book">Book a date</a>
       </nav>
@@ -150,13 +150,15 @@
       </div>
     </section>
 
-    <section id="moments" class="section moments" aria-labelledby="moments-title" hidden>
+    <section id="moments" class="section moments" aria-labelledby="moments-title">
       <div class="wrap">
         <div class="section-intro">
           <h2 id="moments-title" class="display h2">Ziza moments</h2>
           <p>Straight from the booth and the dance floor. For more clips, follow <a class="text-link" href="https://www.instagram.com/iamdjziza/" rel="noopener" target="_blank">@iamdjziza</a>.</p>
         </div>
-        <div class="moments-grid" id="moments-grid"></div>
+        <div class="moments-grid is-single" id="moments-grid">
+          <p class="moments-note">Loading event clips…</p>
+        </div>
       </div>
     </section>
 
@@ -290,6 +292,6 @@
     </div>
   </footer>
 
-  <script src="/assets/js/site.js?v=20261003b" defer></script>
+  <script src="/assets/js/site.js?v=20261003c" defer></script>
 </body>
 </html>

@@ -10,9 +10,9 @@
   var FORM_ENDPOINT = 'https://pxrdo44d63zs32thmfgpx6doua0mbwsu.lambda-url.us-east-2.on.aws/';
   var FALLBACK_TO = 'djziza@denwize.com';
 
-  // Event videos: CloudFront address in front of the djziza-events S3 bucket (see djziza-media.yaml).
+  // Event videos: CloudFront address in front of the ziza-moments S3 bucket (see ziza-moments.yaml).
   // Upload a video to the bucket's videos/ folder and it appears on the site. Give its thumbnail the
-  // same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section.
+  // same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section and its menu link.
   var MEDIA_URL = 'https://d1qkitd2sch2hj.cloudfront.net';
   var MEDIA_PREFIX = 'videos/';
 
@@ -227,7 +227,8 @@
   (function initMoments() {
     var section = document.getElementById('moments');
     var grid = document.getElementById('moments-grid');
-    if (!section || !grid || !MEDIA_URL) return;
+    if (!section || !grid) return;
+    if (!MEDIA_URL) { section.hidden = true; document.querySelectorAll('a[href$="#moments"]').forEach(function (a) { a.hidden = true; }); return; }
     var base = MEDIA_URL.replace(/\/$/, '');
     var VIDEO = /\.(mp4|m4v|webm|mov)$/i, IMAGE = /\.(jpe?g|png|webp)$/i;
 
@@ -239,9 +240,14 @@
     function url(key) { return base + '/' + key.split('/').map(encodeURIComponent).join('/'); }
     function type(key) { var ext = key.split('.').pop().toLowerCase(); return ext === 'mov' ? 'video/quicktime' : ext === 'webm' ? 'video/webm' : 'video/mp4'; }
 
+    function showNote() {
+      grid.classList.add('is-single');
+      grid.innerHTML = '<p class="moments-note">New clips are on the way. Catch the latest on <a class="text-link" href="https://www.instagram.com/iamdjziza/" rel="noopener" target="_blank">Instagram @iamdjziza</a>.</p>';
+    }
+
     function render(objects) {
       var videos = objects.filter(function (o) { return VIDEO.test(o.key); });
-      if (!videos.length) return;
+      if (!videos.length) { showNote(); return; }
       var images = objects.filter(function (o) { return IMAGE.test(o.key); });
       var byStem = {};
       images.forEach(function (o) { byStem[stem(o.key)] = o.key; });
@@ -270,8 +276,6 @@
         }
       });
 
-      section.hidden = false;
-      document.querySelectorAll('[data-moments-link]').forEach(function (a) { a.hidden = false; });
       if (location.hash === '#moments') section.scrollIntoView();
     }
 
@@ -290,10 +294,10 @@
         }).filter(function (o) { return o.key.indexOf(MEDIA_PREFIX) === 0 && o.size > 0; });
         render(objects);
       })
-      .catch(function () {
+      .catch(function (err) {
         clearTimeout(timer);
-        // Section stays hidden; old links to #moments fall back to About
-        if (location.hash === '#moments') { var a = document.getElementById('about'); if (a) a.scrollIntoView(); }
+        if (window.console) console.warn('Ziza moments: could not load videos', err);
+        showNote();
       });
   })();
 
