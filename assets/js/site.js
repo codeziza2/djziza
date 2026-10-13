@@ -11,7 +11,8 @@
   var FALLBACK_TO = 'djziza@denwize.com';
 
   // Event videos: CloudFront address in front of the ziza-moments S3 bucket (see ziza-moments.yaml).
-  // Upload a video to the bucket's videos/ folder and it appears on the site. Give its thumbnail the
+  // Upload a video to the bucket's videos/ folder and it appears on the site. A thumbnail is optional:
+  // without one, the site shows a frame from the video. To choose your own, upload an image with the
   // same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section and its menu link.
   var MEDIA_URL = 'https://d1qkitd2sch2hj.cloudfront.net';
   var MEDIA_PREFIX = 'videos/';
@@ -257,9 +258,11 @@
       grid.innerHTML = videos.map(function (v) {
         // Thumbnail: same name as the video; if there's exactly one video and one image, pair them.
         var poster = byStem[stem(v.key)] || (videos.length === 1 && images.length === 1 ? images[0].key : '');
+        // No thumbnail uploaded? Show a frame from ~2 seconds in, taken from the video itself.
+        var src = url(v.key) + (poster ? '' : '#t=2');
         return '<figure class="moment"><div class="moment-media">' +
-          '<video controls playsinline preload="none"' + (poster ? ' poster="' + esc(url(poster)) + '"' : '') + ' aria-label="' + esc(title(v.key)) + '">' +
-          '<source src="' + esc(url(v.key)) + '" type="' + type(v.key) + '">' +
+          '<video controls playsinline preload="' + (poster ? 'none' : 'metadata') + '"' + (poster ? ' poster="' + esc(url(poster)) + '"' : '') + ' aria-label="' + esc(title(v.key)) + '">' +
+          '<source src="' + esc(src) + '" type="' + type(v.key) + '">' +
           '</video></div><figcaption><span class="moment-title">' + esc(title(v.key)) + '</span></figcaption></figure>';
       }).join('');
 
@@ -267,6 +270,10 @@
       grid.querySelectorAll('video').forEach(function (vid) {
         vid.addEventListener('play', function () {
           grid.querySelectorAll('video').forEach(function (other) { if (other !== vid) other.pause(); });
+        });
+        // Match the frame to the video's shape (e.g. vertical phone clips)
+        vid.addEventListener('loadedmetadata', function () {
+          if (vid.videoWidth && vid.videoHeight) vid.parentNode.style.aspectRatio = vid.videoWidth + ' / ' + vid.videoHeight;
         });
         var p = vid.getAttribute('poster');
         if (p) {
