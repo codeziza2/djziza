@@ -306,12 +306,28 @@ noscript .form-error { display: block; }
 
 /* Ziza moments (event videos from S3/CloudFront) */
 .moments { background: var(--mist); border-block: 1px solid var(--mist-line); }
-.moments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 28px; }
-.moments-grid.is-single { grid-template-columns: minmax(0, 960px); }
-.moment { margin: 0; display: flex; flex-direction: column; gap: 12px; }
-.moment-media { position: relative; border-radius: 14px; overflow: hidden; background: var(--ink); aspect-ratio: 16 / 9; max-height: 78vh; box-shadow: 0 18px 40px rgba(16, 42, 44, .12); }
-.moment-media video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--ink); }
-.moment figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.moment-title { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: 26px; line-height: 1; }
-.moment-meta { font-size: 15px; color: var(--muted); }
+.moments-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 28px; }
+.moments-grid.is-single { grid-template-columns: minmax(0, 720px); }
+.moment-card { width: 100%; padding: 0; border: 0; background: none; font: inherit; color: var(--ink); text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 12px; border-radius: 14px; }
+.moment-thumb { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--ink); box-shadow: 0 14px 32px rgba(16, 42, 44, .14); transition: transform .18s ease, box-shadow .18s ease; }
+.moment-thumb img, .moment-thumb video { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.moment-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(16, 42, 44, .45)); }
+.moment-play { position: absolute; z-index: 1; left: 50%; top: 50%; width: 68px; height: 68px; margin: -34px 0 0 -34px; border-radius: 999px; background: var(--tangerine); color: var(--ink); display: flex; align-items: center; justify-content: center; padding-left: 4px; box-shadow: 0 8px 22px rgba(0, 0, 0, .3); transition: transform .18s ease; }
+.moment-card:hover .moment-thumb { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(16, 42, 44, .2); }
+.moment-card:hover .moment-play { transform: scale(1.08); }
+.moment-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+.moment-title { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: 24px; line-height: 1; }
+
+/* Full-screen video viewer */
+.moment-viewer { position: fixed; inset: 0; z-index: 100; background: rgba(8, 20, 21, .92); display: flex; align-items: center; justify-content: center; padding: clamp(12px, 4vw, 48px); }
+.moment-viewer[hidden] { display: none !important; }
+.moment-viewer-inner { width: min(100%, 1200px); max-height: 100%; display: flex; flex-direction: column; gap: 12px; }
+.moment-viewer-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--white); }
+.moment-viewer-title { margin: 0; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(22px, 3vw, 32px); line-height: 1; }
+.moment-viewer-close { width: 48px; height: 48px; flex-shrink: 0; border-radius: 999px; border: 2px solid rgba(255, 255, 255, .5); background: transparent; color: var(--white); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.moment-viewer-close:hover { background: var(--white); color: var(--ink); }
+.moment-viewer-close:focus-visible { outline: 3px solid var(--marigold); outline-offset: 3px; }
+.moment-viewer-video { width: 100%; max-height: calc(100vh - 120px); max-height: calc(100dvh - 120px); border-radius: 12px; background: #000; }
+html.viewer-open { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .moment-thumb, .moment-play { transition: none; } }
 .moments-note { margin: 0; padding: 24px; border-radius: 14px; background: var(--white); color: var(--ink-soft); border-left: 6px solid var(--marigold); }
