@@ -12,10 +12,12 @@
 
   // Event videos: CloudFront address in front of the ziza-moments S3 bucket (see ziza-moments.yaml).
   // Upload a video to the bucket's videos/ folder and it appears on the site. A thumbnail is optional:
-  // without one, the site shows a frame from the video. To choose your own, upload an image with the
-  // same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section and its menu link.
+  // without one, the site uses DEFAULT_THUMBNAIL (below). To give a video its own, upload an image with
+  // the same name (party-2025.mp4 + party-2025.jpg). Leave empty to hide the section and its menu link.
   var MEDIA_URL = 'https://d1qkitd2sch2hj.cloudfront.net';
   var MEDIA_PREFIX = 'videos/';
+  // Thumbnail used for every video that doesn't have its own (an image with the same name as the video).
+  var DEFAULT_THUMBNAIL = 'videos/rave_party_2024.png';
 
   var MIXCLOUD_USER = 'djziza';
   var MIX_LIMIT = 13; // newest mixes to show
@@ -308,8 +310,11 @@
 
       grid.classList.remove('is-single');
       grid.innerHTML = videos.map(function (v) {
-        // Thumbnail: an image with the same name as the video, or else a frame from ~2 seconds in.
-        var poster = byStem[stem(v.key)] ? url(byStem[stem(v.key)]) : '';
+        // Thumbnail: an image with the same name as the video, else the default thumbnail,
+        // else (if the default is missing from the bucket) a frame from ~2 seconds in.
+        var own = byStem[stem(v.key)];
+        var fallback = images.some(function (o) { return o.key === DEFAULT_THUMBNAIL; }) ? DEFAULT_THUMBNAIL : '';
+        var poster = own ? url(own) : fallback ? url(fallback) : '';
         var thumb = poster
           ? '<img src="' + esc(poster) + '" alt="" loading="lazy">'
           : '<video muted playsinline preload="metadata" tabindex="-1" aria-hidden="true"><source src="' + esc(url(v.key) + '#t=2') + '" type="' + type(v.key) + '"></video>';
