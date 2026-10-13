@@ -243,8 +243,60 @@
 
     function showNote() {
       grid.classList.add('is-single');
-      grid.innerHTML = '<p class="moments-note">New clips are on the way. Catch the latest on <a class="text-link" href="https://www.instagram.com/iamdjziza/" rel="noopener" target="_blank">Instagram @iamdjziza</a>.</p>';
+      grid.innerHTML = '<li class="moments-note">New clips are on the way. Catch the latest on <a class="text-link" href="https://www.instagram.com/iamdjziza/" rel="noopener" target="_blank">Instagram @iamdjziza</a>.</li>';
     }
+
+    // Viewer: a full-screen player that opens when a thumbnail is clicked
+    var viewer = document.createElement('div');
+    viewer.className = 'moment-viewer';
+    viewer.hidden = true;
+    viewer.setAttribute('role', 'dialog');
+    viewer.setAttribute('aria-modal', 'true');
+    viewer.setAttribute('aria-labelledby', 'moment-viewer-title');
+    viewer.innerHTML = '<div class="moment-viewer-inner">' +
+      '<div class="moment-viewer-bar"><p class="moment-viewer-title" id="moment-viewer-title"></p>' +
+      '<button type="button" class="moment-viewer-close" aria-label="Close video">' +
+      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+      '<video class="moment-viewer-video" controls playsinline></video></div>';
+    document.body.appendChild(viewer);
+    var vVideo = viewer.querySelector('video');
+    var vTitle = viewer.querySelector('.moment-viewer-title');
+    var vClose = viewer.querySelector('.moment-viewer-close');
+    var lastCard = null;
+
+    function openViewer(card) {
+      lastCard = card;
+      vTitle.textContent = card.getAttribute('data-title');
+      vVideo.innerHTML = '<source src="' + esc(card.getAttribute('data-src')) + '" type="' + esc(card.getAttribute('data-type')) + '">';
+      var poster = card.getAttribute('data-poster');
+      if (poster) vVideo.setAttribute('poster', poster); else vVideo.removeAttribute('poster');
+      vVideo.load();
+      viewer.hidden = false;
+      document.documentElement.classList.add('viewer-open');
+      vClose.focus();
+      var played = vVideo.play();
+      if (played && played.catch) played.catch(function () { /* autoplay blocked: viewer shows controls */ });
+    }
+    function closeViewer() {
+      if (viewer.hidden) return;
+      vVideo.pause();
+      vVideo.removeAttribute('src');
+      vVideo.innerHTML = '';
+      vVideo.load();
+      viewer.hidden = true;
+      document.documentElement.classList.remove('viewer-open');
+      if (lastCard) lastCard.focus();
+    }
+    vClose.addEventListener('click', closeViewer);
+    viewer.addEventListener('click', function (e) { if (e.target === viewer) closeViewer(); });
+    document.addEventListener('keydown', function (e) {
+      if (viewer.hidden) return;
+      if (e.key === 'Escape') { closeViewer(); }
+      else if (e.key === 'Tab') { // keep focus inside the viewer
+        var f = [vClose, vVideo]; var i = f.indexOf(document.activeElement);
+        e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
+      }
+    });
 
     function render(objects) {
       var videos = objects.filter(function (o) { return VIDEO.test(o.key); });
@@ -254,33 +306,20 @@
       images.forEach(function (o) { byStem[stem(o.key)] = o.key; });
       videos.sort(function (a, b) { return b.modified - a.modified; });
 
-      grid.classList.toggle('is-single', videos.length === 1);
+      grid.classList.remove('is-single');
       grid.innerHTML = videos.map(function (v) {
-        // Thumbnail: same name as the video; if there's exactly one video and one image, pair them.
-        var poster = byStem[stem(v.key)] || (videos.length === 1 && images.length === 1 ? images[0].key : '');
-        // No thumbnail uploaded? Show a frame from ~2 seconds in, taken from the video itself.
-        var src = url(v.key) + (poster ? '' : '#t=2');
-        return '<figure class="moment"><div class="moment-media">' +
-          '<video controls playsinline preload="' + (poster ? 'none' : 'metadata') + '"' + (poster ? ' poster="' + esc(url(poster)) + '"' : '') + ' aria-label="' + esc(title(v.key)) + '">' +
-          '<source src="' + esc(src) + '" type="' + type(v.key) + '">' +
-          '</video></div><figcaption><span class="moment-title">' + esc(title(v.key)) + '</span></figcaption></figure>';
+        // Thumbnail: an image with the same name as the video, or else a frame from ~2 seconds in.
+        var poster = byStem[stem(v.key)] ? url(byStem[stem(v.key)]) : '';
+        var thumb = poster
+          ? '<img src="' + esc(poster) + '" alt="" loading="lazy">'
+          : '<video muted playsinline preload="metadata" tabindex="-1" aria-hidden="true"><source src="' + esc(url(v.key) + '#t=2') + '" type="' + type(v.key) + '"></video>';
+        return '<li><button type="button" class="moment-card" data-src="' + esc(url(v.key)) + '" data-type="' + type(v.key) + '" data-title="' + esc(title(v.key)) + '" data-poster="' + esc(poster) + '" aria-label="Play ' + esc(title(v.key)) + '">' +
+          '<span class="moment-thumb">' + thumb + '<span class="moment-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>' +
+          '<span class="moment-title">' + esc(title(v.key)) + '</span></button></li>';
       }).join('');
 
-      // Only one video plays at a time; match the frame to the thumbnail's shape (e.g. vertical clips)
-      grid.querySelectorAll('video').forEach(function (vid) {
-        vid.addEventListener('play', function () {
-          grid.querySelectorAll('video').forEach(function (other) { if (other !== vid) other.pause(); });
-        });
-        // Match the frame to the video's shape (e.g. vertical phone clips)
-        vid.addEventListener('loadedmetadata', function () {
-          if (vid.videoWidth && vid.videoHeight) vid.parentNode.style.aspectRatio = vid.videoWidth + ' / ' + vid.videoHeight;
-        });
-        var p = vid.getAttribute('poster');
-        if (p) {
-          var img = new Image();
-          img.onload = function () { if (img.naturalWidth && img.naturalHeight) vid.parentNode.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight; };
-          img.src = p;
-        }
+      grid.querySelectorAll('.moment-card').forEach(function (card) {
+        card.addEventListener('click', function () { openViewer(card); });
       });
 
       if (location.hash === '#moments') section.scrollIntoView();
